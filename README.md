@@ -36,15 +36,16 @@ Open the terminal and run the `Setup` command to create the required folders and
   C-BuildTool.exe Setup
  ```
 Now you should have these folders:
-(your project)
-├── bin                   # Location of the final binary
-├── lib                   # Libraries and other dependencies
-├── obj                   # Object files
-├── res                   # Resources (content will be copied to `/bin`)
-├── src                   # Source files
-├── CBConfig.json         # Configuration of your project
-└── C-BuildTool.exe
-
+ ```
+  (your project)
+  ├── bin                   # Location of the final binary
+  ├── lib                   # Libraries and other dependencies
+  ├── obj                   # Object files
+  ├── res                   # Resources (content will be copied to `/bin`)
+  ├── src                   # Source files
+  ├── CBConfig.json         # Configuration of your project
+  └── C-BuildTool.exe
+ ```
 Bulld the project by running `Build`.
  ```sh
   C-BuildTool.exe Build
