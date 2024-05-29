@@ -6,13 +6,10 @@ namespace C_BuildTool.Builder
         public CBuilderConfig Config { get; private set; }
 
         private string targetDir;
-        private bool isDirInitialized = false;
 
         public CBuilder(string _targetDir) {
-            targetDir = _targetDir;
-            Config = CBuilderConfig.LoadConfig(_targetDir + "./CBConfig.json");
-
-            isDirInitialized = File.Exists(targetDir + "./CBConfig.json");
+            targetDir = CorrectPath(_targetDir);
+            Config = CBuilderConfig.LoadConfig(targetDir + "./CBConfig.json");
         }
 
         public void InitializedTargetDir() {
@@ -74,7 +71,7 @@ namespace C_BuildTool.Builder
                     Directory.CreateDirectory(_targetfolder);
 
                 foreach (string _f in _files) {
-                    if (Path.GetExtension(_f) != ".c") continue;
+                    if (Path.GetExtension(_f) != ".c" && Path.GetExtension(_f) != ".cpp") continue;
 
                     Console.WriteLine($"File: {Path.GetFileName(_f)}");
 
@@ -104,12 +101,7 @@ namespace C_BuildTool.Builder
                 $"-o \"{_target}\" " +
                 $"-c {FormatArgs(Config.CompilerFlags, "-")} {FormatArgs(Config.IncludeDirectories, "-I")}";
 
-            Console.WriteLine(_args);
-
-            int _result = RunCommand("gcc", _args);
-            if (_result == -1) return false;
-
-            return true;
+            return RunCommand(Config.Compiler, _args) != -1;
         }
 
         private List<string>? SearchFolderForObjFiles(string _path) {
@@ -145,11 +137,7 @@ namespace C_BuildTool.Builder
                 $"{FormatArgs(_objFiles, "")}" +
                 $"{FormatArgs(Config.LinkerFlags, "-l")} {FormatArgs(Config.LinkedDirectories, "-L")}";
 
-            Console.WriteLine(_args);
-
-            int _res = RunCommand(Config.Compiler, _args);
-
-            return _res != -1;
+            return RunCommand(Config.Compiler, _args) != -1;
         }
 
         private void CleanFolder(string _path) {
@@ -199,21 +187,44 @@ namespace C_BuildTool.Builder
             return _output;
         }
 
+        private string CorrectPath(string _path) {
+            return _path.Replace("\\", "/")!;
+        }
+
+        private string CompressPath(string _path) {
+            return CorrectPath(_path).Replace(targetDir, "<workdir>");
+        }
+
+        private void PrintCompressedError(string _line) {
+            if (string.IsNullOrEmpty(_line)) return;
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(CompressPath(_line));
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        private void PrintCompressed(string _line) {
+            if (string.IsNullOrEmpty(_line)) return;
+            Console.WriteLine(CompressPath(_line));
+        }
+
         private int RunCommand(string _program, string _args) {
             try {
+                Console.WriteLine("> " + CompressPath(_program + " " + _args));
+
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = _program;
                 startInfo.Arguments = _args;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
+                startInfo.RedirectStandardError = true;
                 Process? _p = Process.Start(startInfo);
 
                 if (_p == null) return -1;
 
                 while (!_p.HasExited) {
-                    if (_p.StandardOutput.EndOfStream) break;
-                    string? line = _p.StandardOutput.ReadLine();
-                    Console.WriteLine(line);
+                    PrintCompressed(_p.StandardOutput.ReadToEnd());
+                    PrintCompressedError(_p.StandardError.ReadToEnd());
                 }
 
                 return _p.ExitCode;

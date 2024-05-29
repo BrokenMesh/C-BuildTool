@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "C-BuildTool": {
+      "commandName": "Project",
+      "commandLineArgs": "Build",
+      "workingDirectory": "D:\\Users\\elkor\\Documents\\Projects\\Code\\C++\\C-BuildDemo"
+    }
+  }
+}
