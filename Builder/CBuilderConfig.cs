@@ -1,31 +1,31 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
 
 namespace C_BuildTool.Builder
 {
     internal class CBuilderConfig 
     {
-        [Required] public string Target { get; }
-        [Required] public string Compiler { get; }
-        [Required] public List<string> CompilerFlags { get; }
-        [Required] public List<string> IncludeDirectories { get; }
-        [Required] public List<string> LinkerFlags { get; }
-        [Required] public List<string> LinkedDirectories { get; }
+        [JsonRequired] public string Target { get; }
+        [JsonRequired] public string Compiler { get; }
+        [JsonRequired] public List<string> CompilerFlags { get; }
+        [JsonRequired] public List<string> IncludeDirectories { get; }
+        [JsonRequired] public List<string> LinkerFlags { get; }
+        [JsonRequired]  public List<string> LinkedElements { get; }
 
-        public CBuilderConfig(string target, string compiler, List<string> compilerFlags, List<string> includeDirectories, List<string> linkerFlags, List<string> linkedDirectories) {
+        public CBuilderConfig(string target, string compiler, List<string> compilerFlags, List<string> includeDirectories, List<string> linkerFlags, List<string> linkedElements) {
             Target = target;
             Compiler = compiler;
             CompilerFlags = compilerFlags;
             IncludeDirectories = includeDirectories;
             LinkerFlags = linkerFlags;
-            LinkedDirectories = linkedDirectories;
+            LinkedElements = linkedElements;
         }
 
         public static void SaveConfig(CBuilderConfig _config, string _path) {
             try {
-                string _configText = JsonSerializer.Serialize(_config);
+                string _configText = JsonConvert.SerializeObject(_config);
                 File.WriteAllText(_path, _configText);
                 Console.WriteLine("Saved Config File at " + _path);
             }
@@ -38,7 +38,7 @@ namespace C_BuildTool.Builder
 
             try {
                 string _file = File.ReadAllText(_path);
-                CBuilderConfig? _config = JsonSerializer.Deserialize<CBuilderConfig>(_file);
+                CBuilderConfig? _config = JsonConvert.DeserializeObject<CBuilderConfig>(_file);
 
                 if (_config != null) {
                     Console.WriteLine("Loaded Config File: " + _path);

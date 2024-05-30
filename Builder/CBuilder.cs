@@ -135,7 +135,7 @@ namespace C_BuildTool.Builder
             string _args =
                 $"-o \"{targetDir + "/bin/" + Config.Target}\" " +
                 $"{FormatArgs(_objFiles, "")}" +
-                $"{FormatArgs(Config.LinkerFlags, "-l")} {FormatArgs(Config.LinkedDirectories, "-L")}";
+                $"{FormatArgs(Config.LinkerFlags, "")} {FormatArgs(Config.LinkedElements, "-L")}";
 
             return RunCommand(Config.Compiler, _args) != -1;
         }
