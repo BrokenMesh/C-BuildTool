@@ -13,14 +13,16 @@ namespace C_BuildTool.Builder
         [JsonRequired] public List<string> IncludeDirectories { get; }
         [JsonRequired] public List<string> LinkerFlags { get; }
         [JsonRequired]  public List<string> LinkedElements { get; }
+        [JsonRequired]  public List<string> LinkedDirectories { get; }
 
-        public CBuilderConfig(string target, string compiler, List<string> compilerFlags, List<string> includeDirectories, List<string> linkerFlags, List<string> linkedElements) {
+        public CBuilderConfig(string target, string compiler, List<string> compilerFlags, List<string> includeDirectories, List<string> linkerFlags, List<string> linkedElements, List<string> linkedDirectories) {
             Target = target;
             Compiler = compiler;
             CompilerFlags = compilerFlags;
             IncludeDirectories = includeDirectories;
             LinkerFlags = linkerFlags;
             LinkedElements = linkedElements;
+            LinkedDirectories = linkedDirectories;
         }
 
         public static void SaveConfig(CBuilderConfig _config, string _path) {
@@ -50,7 +52,7 @@ namespace C_BuildTool.Builder
                 Console.WriteLine("Using standart configuration");
             }
 
-            return new CBuilderConfig("main.exe", "gcc", new List<string> { "Wall", "g"}, new List<string>(), new List<string>(), new List<string>());
+            return new CBuilderConfig("main.exe", "gcc", new List<string> { "Wall", "g"}, new List<string>(), new List<string>(), new List<string>(), new List<string>());
         }
 
 

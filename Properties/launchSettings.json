@@ -2,7 +2,7 @@
   "profiles": {
     "C-BuildTool": {
       "commandName": "Project",
-      "commandLineArgs": "Build",
+      "commandLineArgs": "Run",
       "workingDirectory": "D:\\Users\\elkor\\Documents\\Projects\\Code\\C\\tododemo"
     }
   }

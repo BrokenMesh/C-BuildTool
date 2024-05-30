@@ -6,30 +6,18 @@ internal class Program
 {
     private static void Main(string[] _args) {
 
+        CBuilder _builder = new CBuilder(Environment.CurrentDirectory);
+
         if (_args.Length > 0) {
-            switch (_args[0]) {
-                case "Setup": Setup(); return;
-                case "Clean": Clean(); return;
-                case "Build": Build(); return;
+            switch (_args[0].ToLower()) {
+                case "setup": _builder.InitializedTargetDir(); return;
+                case "clean": _builder.Clean(); return;
+                case "build": _builder.Build(); return;
+                case "run": _builder.Run(); return;
             }
         }
 
         PrintUsage();
-    }
-
-    private static void Setup() {
-        CBuilder _builder = new CBuilder(Environment.CurrentDirectory);
-        _builder.InitializedTargetDir();
-    }
-
-    private static void Build() {
-        CBuilder _builder = new CBuilder(Environment.CurrentDirectory);
-        _builder.Build();
-    }
-
-    private static void Clean() {
-        CBuilder _builder = new CBuilder(Environment.CurrentDirectory);
-        _builder.Clean();
     }
 
     private static void PrintUsage() {
@@ -39,7 +27,8 @@ internal class Program
             "Actions: \n" +
             "> Setup\t\t\t - Set up c project\n" +
             "> Clean\t\t\t - Clean binary and object folders\n" +
-            "> Build\t\t\t - Build c project\n";
+            "> Build\t\t\t - Build c project\n" + 
+            "> Run\t\t\t - Build & Run c project\n";
 
         Console.WriteLine(_usage);
     }

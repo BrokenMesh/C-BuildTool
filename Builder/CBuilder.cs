@@ -62,6 +62,11 @@ namespace C_BuildTool.Builder
             MoveResources();
         }
 
+        public void Run() {
+            Build();
+            RunCommand("./bin/" + Config.Target, "");
+        }
+
         private bool SearchFolderForCompelation(string _path) {
             try {
                 string[] _files = Directory.GetFiles(targetDir + _path);
@@ -135,7 +140,9 @@ namespace C_BuildTool.Builder
             string _args =
                 $"-o \"{targetDir + "/bin/" + Config.Target}\" " +
                 $"{FormatArgs(_objFiles, "")}" +
-                $"{FormatArgs(Config.LinkerFlags, "")} {FormatArgs(Config.LinkedElements, "-L")}";
+                $"{FormatArgs(Config.LinkerFlags, "")} " +
+                $"{FormatArgs(Config.LinkedElements, "-l")}" +
+                $"{FormatArgs(Config.LinkedDirectories, "-L")}";
 
             return RunCommand(Config.Compiler, _args) != -1;
         }
